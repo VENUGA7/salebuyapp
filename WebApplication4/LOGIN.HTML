@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px 50px;
+            border-radius: 25px;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
+            width: 380px;
+            text-align: center;
+            position: relative;
+        }
+
+            .login-container h2 {
+                margin-bottom: 30px;
+                font-weight: 700;
+                color: #e91e63;
+                text-shadow: 1px 1px 6px rgba(233,30,99,0.5);
+            }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            border: 2px solid #f48fb1;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            outline: none;
+            box-shadow: inset 1px 1px 6px rgba(244, 143, 177, 0.2);
+        }
+
+            input:focus, select:focus {
+                border-color: #e91e63;
+                box-shadow: 0 0 8px #e91e63;
+            }
+
+        select {
+            background: url('data:image/svg+xml;utf8,<svg fill="%23e91e63" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 15px center;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            padding-right: 40px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: linear-gradient(90deg, #ff4081, #f50057);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(245, 0, 87, 0.5);
+            transition: background 0.3s ease;
+        }
+
+            button:hover {
+                background: linear-gradient(90deg, #f50057, #c51162);
+            }
+
+        .success-message {
+            margin-top: 20px;
+            color: #4caf50;
+            font-weight: 700;
+            display: none;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="name" placeholder="Full Name" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <input type="tel" id="phone" placeholder="Phone Number" required pattern="[0-9]{10}" />
+
+            <select id="country" required>
+                <option value="" disabled selected>Select Country</option>
+                <option>India</option>
+                <option>USA</option>
+                <option>UK</option>
+                <option>Canada</option>
+                <option>Australia</option>
+            </select>
+
+            <select id="state" required>
+                <option value="" disabled selected>Select State</option>
+                <option>Tamil Nadu</option>
+                <option>Kerala</option>
+                <option>Karnataka</option>
+                <option>Delhi</option>
+                <option>Maharashtra</option>
+            </select>
+
+            <select id="district" required>
+                <option value="" disabled selected>Select District</option>
+                <option>Chennai</option>
+                <option>Coimbatore</option>
+                <option>Madurai</option>
+                <option>Trichy</option>
+                <option>Salem</option>
+            </select>
+
+            <button type="submit">Login</button>
+        </form>
+        <div class="success-message" id="successMsg">Login Successful ✔️</div>
+    </div>
+
+    <script>
+  const loginForm = document.getElementById('loginForm');
+  const successMsg = document.getElementById('successMsg');
+
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Simple form validation can be extended as needed
+    if (loginForm.checkValidity()) {
+      successMsg.style.display = 'block';
+      // Optionally clear form
+      loginForm.reset();
+    } else {
+      successMsg.style.display = 'none';
+    }
+  });
+    </script>
+
+</body>
+</html>

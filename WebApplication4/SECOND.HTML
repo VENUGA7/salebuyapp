@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sale & Buy App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffe6f0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            background: #fff0f6;
+            padding: 20px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 0 10px #f6a5c0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #d6336c;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            color: #a61e4d;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #d6336c;
+        }
+
+        input[type="file"] {
+            margin-top: 8px;
+        }
+
+        button {
+            margin-top: 15px;
+            background: #d6336c;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+            button:hover {
+                background: #a61e4d;
+            }
+
+        #message {
+            margin-top: 10px;
+            color: green;
+            text-align: center;
+            display: none;
+            font-weight: bold;
+        }
+
+        #itemsList > div {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #d6336c;
+            padding-bottom: 10px;
+        }
+
+        #itemsList img {
+            max-width: 100px;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sale Container -->
+    <div class="container" id="saleContainer">
+        <h2>Sale</h2>
+        <label for="itemName">Item Name</label>
+        <input type="text" id="itemName" placeholder="Enter item name" />
+
+        <label for="itemDesc">Description</label>
+        <input type="text" id="itemDesc" placeholder="Enter description" />
+
+        <label for="itemExpiry">Expiry Date</label>
+        <input type="date" id="itemExpiry" />
+
+        <label for="itemImage">Upload Image</label>
+        <input type="file" id="itemImage" accept="image/*" />
+
+        <button id="uploadBtn">Upload Item</button>
+        <div id="message">Upload Successful ✔</div>
+    </div>
+
+    <!-- Buy Container -->
+    <div class="container" id="buyContainer">
+        <h2>Buy</h2>
+        <label for="buyCategory">Select Category</label>
+        <select id="buyCategory">
+            <option value="">-- Select Category --</option>
+            <option value="fruits">Fruits</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="medicine">Medicine</option>
+        </select>
+        <div id="itemsList"></div>
+    </div>
+
+    <script>
+  let saleItems = [
+    {
+      name: "Apple",
+      desc: "Fresh red apples",
+      expiry: "2025-07-30",
+      imgData: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg",
+      category: "fruits"
+    },
+    {
+      name: "Carrot",
+      desc: "Organic carrots",
+      expiry: "2025-08-15",
+      imgData: "https://upload.wikimedia.org/wikipedia/commons/7/70/Carrot_on_white_background.jpg",
+      category: "vegetables"
+    },
+    {
+      name: "Paracetamol",
+      desc: "Pain relief tablets",
+      expiry: "2026-01-01",
+      imgData: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Paracetamol_500mg_tablets.jpg",
+      category: "medicine"
+    }
+  ];
+
+  const uploadBtn = document.getElementById('uploadBtn');
+  const message = document.getElementById('message');
+
+  uploadBtn.addEventListener('click', () => {
+    const name = document.getElementById('itemName').value.trim();
+    const desc = document.getElementById('itemDesc').value.trim();
+    const expiry = document.getElementById('itemExpiry').value;
+    const imageInput = document.getElementById('itemImage');
+
+    if (!name || !desc || !expiry || imageInput.files.length === 0) {
+      alert('Please fill all fields and select an image.');
+      return;
+    }
+
+    let category = '';
+    const lname = name.toLowerCase();
+    if (lname.includes('apple') || lname.includes('banana') || lname.includes('fruit')) category = 'fruits';
+    else if (lname.includes('carrot') || lname.includes('vegetable') || lname.includes('veg')) category = 'vegetables';
+    else category = 'medicine';
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgData = e.target.result;
+
+      saleItems.push({
+        name,
+        desc,
+        expiry,
+        imgData,
+        category
+      });
+
+      document.getElementById('itemName').value = '';
+      document.getElementById('itemDesc').value = '';
+      document.getElementById('itemExpiry').value = '';
+      imageInput.value = '';
+
+      message.style.display = 'block';
+      setTimeout(() => message.style.display = 'none', 2000);
+
+      const buyCategory = document.getElementById('buyCategory').value;
+      if (buyCategory) {
+        showItemsForCategory(buyCategory);
+      }
+    };
+    reader.readAsDataURL(imageInput.files[0]);
+  });
+
+  const buyCategorySelect = document.getElementById('buyCategory');
+  const itemsList = document.getElementById('itemsList');
+
+  buyCategorySelect.addEventListener('change', () => {
+    const category = buyCategorySelect.value;
+    showItemsForCategory(category);
+  });
+
+  function showItemsForCategory(category) {
+    itemsList.innerHTML = '';
+    if (!category) {
+      itemsList.innerHTML = '<p>Please select a category.</p>';
+      return;
+    }
+
+    const filteredItems = saleItems.filter(item => item.category === category);
+
+    if (filteredItems.length === 0) {
+      itemsList.innerHTML = '<p>No items found for this category.</p>';
+      return;
+    }
+
+    filteredItems.forEach(item => {
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <strong>Name:</strong> ${item.name}<br />
+        <strong>Description:</strong> ${item.desc}<br />
+        <strong>Expiry Date:</strong> ${item.expiry}<br />
+        <img src="${item.imgData}" alt="${item.name}" />
+      `;
+      itemsList.appendChild(div);
+    });
+  }
+    </script>
+
+</body>
+</html>
